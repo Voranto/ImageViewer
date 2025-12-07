@@ -12,12 +12,10 @@ async fn main() -> io::Result<()>{
     let data = fs::read("Dog_Breeds.ppm").unwrap();
     let mut cursor = 0;
 
-    // Parse header
-    assert!(data.starts_with(b"P6"));
 
-    // Skip magic number
+    // HEADER NOT USED
     cursor += 2;
-    println!("{} ",cursor);
+
     // Skip whitespace
     while data[cursor].is_ascii_whitespace() {
         cursor += 1;
@@ -26,43 +24,44 @@ async fn main() -> io::Result<()>{
         while data[cursor] != b'\n' {
             cursor += 1;
         }
-        cursor += 1; // skip newline
+        cursor += 1; // newline also skip
     }
 
-    println!("{} ",cursor);
-    // Read width
+    // WIDTH
     let mut w = 0;
     while data[cursor].is_ascii_digit() {
         w = w * 10 + (data[cursor] - b'0') as usize;
         cursor += 1;
     }
 
-    // Skip whitespace
+    // WHITESPACE
     while data[cursor].is_ascii_whitespace() {
         cursor += 1;
     }
 
-    // Read height
+    // HEIGHT
     let mut h = 0;
     while data[cursor].is_ascii_digit() {
         h = h * 10 + (data[cursor] - b'0') as usize;
         cursor += 1;
     }
     println!("{} and {}",w,h);
-    // Skip whitespace
+    // WHITESPACE
     while data[cursor].is_ascii_whitespace() {
         cursor += 1;
     }
 
-    // Read max color value (skip it)
+    // MAX COLOR VALUE -- NOT USED FOR NOW
     while data[cursor].is_ascii_digit() {
         cursor += 1;
     }
 
-    // Skip single whitespace after maxval
     cursor += 1;
-    println!("{} ",cursor);
+
+
     macroquad::window::request_new_screen_size(w as f32, h as f32);
+
+    //Update screen size for next frame
     next_frame().await;
     loop{
     // Now pixel data starts
